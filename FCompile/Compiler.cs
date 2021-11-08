@@ -13,6 +13,8 @@ namespace FCompile
 
         Parser parser;
 
+        ASM asm;
+
         List<Token> tokens = new List<Token>();
 
         Token token;
@@ -22,8 +24,9 @@ namespace FCompile
             lexer = new Lexer(source);
             parser = new Parser(lexer);
             AST_T root = parser.Parse();
-            Console.WriteLine(root.ToString(1));
-            //Console.WriteLine(root + ", " + root.Children.Count);
+            asm = new ASM();
+            string s = asm.AS_F(root);
+            Console.WriteLine(s);
         }
 
         public void Compile()

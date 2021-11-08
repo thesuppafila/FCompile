@@ -20,6 +20,7 @@ namespace FCompile
         TOKEN_LBRACE,
         TOKEN_RBRACE,
         TOKEN_SEMI,
+        TOKEN_KEYWORD,
         TOKEN_EOF
     }
 }

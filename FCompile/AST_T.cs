@@ -28,23 +28,6 @@ namespace FCompile
                 Children = new List<AST_T>();
         }
 
-        public string ToString(int index)
-        {
-            if (Children != null)
-            {
-                foreach (AST_T child in Children)
-                    child.ToString(index++);
-            }
-            String str = "  ";
-            if (Value != null)
-            {
-                for (int i = 0; i < index; i++)
-                    str += str;
-                str += Value.ToString(index);
-            }
-            return str;
-        }
-
         public override string ToString()
         {
             return String.Format("<AST_TYPE = {0}>, <NAME = {1}>, <INT_VALUE = {2}>", Type, Name, IntValue);

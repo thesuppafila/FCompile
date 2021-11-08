@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ASM.cs" />
     <Compile Include="AST.cs" />
     <Compile Include="AST_T.cs" />
     <Compile Include="Compiler.cs" />

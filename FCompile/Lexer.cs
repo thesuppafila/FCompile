@@ -36,7 +36,7 @@ namespace FCompile
 
         private List<string> keywords = new List<string>()
         {
-            "int",
+            //"int",
             "if",
             "else",
             "return"
@@ -87,7 +87,8 @@ namespace FCompile
                 value += CurrentChar;
                 Advance();
             }
-
+            //if (keywords.Contains(value))
+            //    return new Token(value, TokenType.TOKEN_KEYWORD);
             return new Token(value, TokenType.TOKEN_ID);
         }
 

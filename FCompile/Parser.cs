@@ -35,7 +35,7 @@ namespace FCompile
         private AST_T ParseId()
         {
             string value = Token.Value;
-            Eat((int)TokenType.TOKEN_ID); 
+            Eat((int)TokenType.TOKEN_ID);
 
             AST_T ast;
 
@@ -43,24 +43,29 @@ namespace FCompile
             {
                 ast = new AST_T((int)AST.AST_DEFINITION_TYPE);
                 ast.Name = value;
-
-                Console.WriteLine(ast);
                 ast.Value = ParseExpression();
                 return ast;
             }
 
-            if(Token.Type == TokenType.TOKEN_LPAREN) // func (
-            {                
-                ast = new AST_T((int)AST.AST_FUNCTION);
+            if (Token.Type == TokenType.TOKEN_LPAREN) // func (
+            {
+                ast = new AST_T((int)AST.AST_CALL);
                 ast.Name = value;
-                Console.WriteLine(ast);
+                ast.Value = ParseExpression();
+                return ast;
+            }
+
+            if (Token.Type == TokenType.TOKEN_EQUALS)
+            {
+                Eat((int)TokenType.TOKEN_EQUALS);
+                ast = new AST_T((int)AST.AST_ASSIGNMENT);
+                ast.Name = value;
                 ast.Value = ParseExpression();
                 return ast;
             }
 
             ast = new AST_T((int)AST.AST_VARIABLE); // a
             ast.Name = value;
-            Console.WriteLine(ast);
             return ast;
 
         }
@@ -81,14 +86,11 @@ namespace FCompile
 
             Eat((int)TokenType.TOKEN_RPAREN);
 
-            if(Token.Type == TokenType.TOKEN_LBRACE)
+            if (Token.Type == TokenType.TOKEN_LBRACE)
             {
                 ast.Type = AST.AST_FUNCTION;
                 ast.Value = ParseCompound();
-                Console.WriteLine(ast);
-            }
-
-
+            } 
             return ast;
         }
 
@@ -100,7 +102,7 @@ namespace FCompile
 
             ast.Children.Add(ParseExpression());
 
-            while(Token.Type == TokenType.TOKEN_COMMA)
+            while (Token.Type == TokenType.TOKEN_COMMA)
             {
                 ast.Children.Add(ParseExpression());
             }
@@ -116,8 +118,9 @@ namespace FCompile
             Eat((int)TokenType.TOKEN_INT);
 
             AST_T ast = new AST_T((int)AST.AST_INT);
+            ast.Type = AST.AST_INT;
+            ast.Name = "NUMBER";
             ast.IntValue = value;
-            Console.WriteLine(ast);
             return ast;
         }
 
@@ -125,7 +128,7 @@ namespace FCompile
         {
             switch (Token.Type)
             {
-                case TokenType.TOKEN_ID: return ParseId(); 
+                case TokenType.TOKEN_ID: return ParseId();
                 case TokenType.TOKEN_LPAREN: return ParseList();
                 case TokenType.TOKEN_LBRACE: return ParseBlock();
                 case TokenType.TOKEN_INT: return ParseInt();
@@ -137,7 +140,7 @@ namespace FCompile
         public AST_T ParseCompound()
         {
             bool shouldClose = false;
-            if(Token.Type == TokenType.TOKEN_LBRACE)
+            if (Token.Type == TokenType.TOKEN_LBRACE)
             {
                 Eat((int)TokenType.TOKEN_LBRACE);
                 shouldClose = true;
