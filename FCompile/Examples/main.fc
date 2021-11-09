@@ -4,7 +4,8 @@ int side(int a) {
 	cin >> b;
 	if(a < b)
 	{
-		int c = a;
+		int c;
+		c = a;
 	};
 	return a;
 };

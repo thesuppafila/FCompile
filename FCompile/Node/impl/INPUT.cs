@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    public class INPUT: IOPER, INODE
+    public class INPUT : IOPER, INODE
     {
-        public string value;       
+        public ID ID;
     }
 }

@@ -13,7 +13,20 @@
   {"LeftPart": "<ASSIGN>", "RightPart": "ID = <E>"},
   {"LeftPart": "<RL>", "RightPart": "true | false | <EXPRES> <SG> <EXPRES>"},
   {"LeftPart": "<SG>", "RightPart": "< | > | <= | >= | == | !="},
-  {"LeftPart": "<EXPRES>", "RightPart": "<TERM> | <EXPRES> + <TERM> | <EXPRES> - <T>"},
+  {"LeftPart": "<EXPRES>", "RightPart": "<TERM> | <EXPRES> + <TERM> | <EXPRES> - <TERM>"},
   {"LeftPart": "<TERM>", "RightPart": " <FACTOR> | <TERM> * <FACTOR> | <TERM> / <FACTOR>"},
   {"LeftPart": "<FACTOR>", "RightPart": "IDN | CON | ( <EXPRES> ) | - <FACTOR>"}
 ]
+
+
+ParseProgram(ParseFunction(), Eat(";"));
+
+ParseFunction("type", "funcName", ParseDecList() "{" ParseOperList() "}");
+
+ParseDecList("(", ParseDec() || ParseDecList() "," ParseDec(), ")");
+
+ParseDec("type", ParseId( ), )
+
+DECLIST Eat( "(", ")" , ")" )
+
+OPERLIST Eat("TYPE", "ID", )

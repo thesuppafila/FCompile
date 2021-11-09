@@ -56,28 +56,33 @@ namespace FCompile
             return decList;
         }
 
+        //private ID ParseId()
+        //{
+        //    string value = token.Value;
+
+        //    Eat(TokenType.TOKEN_ID);
+        //    ID id = new ID();
+        //    id.name = value;
+
+        //    if (token.Type == TokenType.TOKEN_ASSIGN)
+        //    {
+        //        ParseOper();
+        //    }
+
+        //}
+
         private DEC ParseDec()
         {
             DEC dec = new DEC();
-            if (token.Type == TokenType.TOKEN_TYPE)
-            {
-                dec.TYPE = new TYPE(token.Value);
-            }
+
+            string value = token.Value;
             Eat(TokenType.TOKEN_TYPE);
-            if (token.Type == TokenType.TOKEN_ID)
-            {
-                dec.ID = new ID(token.Value);
-            }
+            dec.TYPE = new TYPE(value);
+
+            value = token.Value;
             Eat(TokenType.TOKEN_ID);
-            if (token.Type == TokenType.TOKEN_ASSIGN)
-            {
-                Eat(TokenType.TOKEN_ASSIGN);
-                dec.ID.value = token.Value;
-            }
-            if (token.Type == TokenType.TOKEN_ID)
-                Eat(TokenType.TOKEN_ID);
-            else if (token.Type == TokenType.TOKEN_INT)
-                Eat(TokenType.TOKEN_INT);
+            dec.ID = new ID(value);
+
             return dec;
         }
 
@@ -145,24 +150,13 @@ namespace FCompile
         private COND ParseCond()
         {
             COND condition = new COND();
-            Eat(TokenType.TOKEN_IF);
+            Eat(TokenType.TOKEN_IF); // if
 
-            Eat(TokenType.TOKEN_LPAREN);
+            Eat(TokenType.TOKEN_LPAREN); // ( ... )
             condition.RL = ParseRL();
             Eat(TokenType.TOKEN_RPAREN);
 
-            if (token.Type == TokenType.TOKEN_LBRACE)
-            {
-                Eat(TokenType.TOKEN_LBRACE);
-
-                condition.operList = ParseOperList();
-
-                Eat(TokenType.TOKEN_RBRACE);
-            }
-            else
-            {
-                condition.operList.Add(ParseOper());
-            }
+            condition.operList = ParseOperList();// { ... }
 
             return condition;
         }
@@ -173,7 +167,7 @@ namespace FCompile
             ASSING assign = new ASSING();
 
             assign.ID = new ID(value);
-            Eat(TokenType.TOKEN_ID);
+            Eat(TokenType.TOKEN_ID); // a = 
             Eat(TokenType.TOKEN_ASSIGN);
 
             assign.expres = ParseExpres();
@@ -187,15 +181,9 @@ namespace FCompile
             Eat(TokenType.TOKEN_REDIRECTED_IN);
 
             INPUT input = new INPUT();
-            if (token.Type == TokenType.TOKEN_ID)
-            {
-                input.value = token.Value;
-                Eat(TokenType.TOKEN_ID);
-                return input;
-            }
 
-            input.value = token.Value;
-            Eat(TokenType.TOKEN_INT);
+            input.ID = new ID(token.Value);
+            Eat(TokenType.TOKEN_ID);
             return input;
         }
 
@@ -209,6 +197,7 @@ namespace FCompile
             {
                 output.value = token.Value;
                 Eat(TokenType.TOKEN_ID);
+                return output;
             }
 
             output.value = token.Value;
@@ -232,7 +221,6 @@ namespace FCompile
             {
                 case TokenType.TOKEN_TYPE:
                     operation = ParseDec();
-                    Eat(TokenType.TOKEN_SEMI);
                     return operation;
                 case TokenType.TOKEN_IF:
                     operation = ParseCond();
@@ -288,7 +276,6 @@ namespace FCompile
                 {
                     func.OPERLIST = ParseOperList();
                 }
-                Eat(TokenType.TOKEN_SEMI);
             }
             return func;
         }
@@ -299,6 +286,7 @@ namespace FCompile
             while (token.Type != TokenType.TOKEN_EOF)
             {
                 program.FUNCLIST.Add(ParseFunc());
+                Eat(TokenType.TOKEN_SEMI);
             }
             return program;
         }

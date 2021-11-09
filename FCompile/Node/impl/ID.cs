@@ -8,11 +8,18 @@ namespace FCompile.Node
 {
     public class ID: INODE
     {
-        public string value;
+        public string name;
+
+        public string expres;
+
+        public ID()
+        {
+        
+        }
 
         public ID(string value)
         {
-            this.value = value;
+            this.expres = value;
         }
     }
 }
