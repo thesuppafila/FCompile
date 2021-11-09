@@ -1,0 +1,19 @@
+[
+  {"LeftPart": "<PROGRAM>", "RightPart": "<FUNC> | <PROGRAM> ; <FUNC>"},
+  {"LeftPart": "<FUNC>", "RightPart": "<DECLIST> { <OPERLIST> }"},
+  {"LeftPart": "<DECLIST>", "RightPart": "<DECLIST> ; <DEC> | <DEC>"},
+  {"LeftPart": "<DEC>", "RightPart": "<TYPE> <ID>"},
+  {"LeftPart": "<TYPE>", "RightPart": "int | float | double"},
+  {"LeftPart": "<OPERLIST>", "RightPart": "<OPERLIST> <OPER> ; | <OPER> ;"},
+  {"LeftPart": "<OPER>", "RightPart": " <COND> | <ASSIGN> | <INPUT> | <OUTPUT>"},  
+  {"LeftPart": "<COND>", "RightPart": "if ( <RL> ) <OPER_BL>"},
+  {"LeftPart": "<OPER_BL>", "RightPart": "{ <OPERLIST> } | <OPER>"},
+  {"LeftPart": "<INPUT>", "RightPart": "cin << ID | <INPUT> << ID"},
+  {"LeftPart": "<OUTPUT>", "RightPart": "cout >> ID | <OUTPUT> >> ID"},
+  {"LeftPart": "<ASSIGN>", "RightPart": "ID = <E>"},
+  {"LeftPart": "<RL>", "RightPart": "true | false | <EXPRES> <SG> <EXPRES>"},
+  {"LeftPart": "<SG>", "RightPart": "< | > | <= | >= | == | !="},
+  {"LeftPart": "<EXPRES>", "RightPart": "<TERM> | <EXPRES> + <TERM> | <EXPRES> - <T>"},
+  {"LeftPart": "<TERM>", "RightPart": " <FACTOR> | <TERM> * <FACTOR> | <TERM> / <FACTOR>"},
+  {"LeftPart": "<FACTOR>", "RightPart": "IDN | CON | ( <EXPRES> ) | - <FACTOR>"}
+]
