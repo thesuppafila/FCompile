@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FCompile.Node;
 
 namespace FCompile
 {
@@ -11,10 +9,6 @@ namespace FCompile
     {
         Lexer lexer;
 
-        Parser parser;
-
-        ASM asm;
-
         List<Token> tokens = new List<Token>();
 
         Token token;
@@ -22,11 +16,18 @@ namespace FCompile
         public Compiler(string source)
         {
             lexer = new Lexer(source);
-            parser = new Parser(lexer);
-            AST_T root = parser.Parse();
-            asm = new ASM();
-            string s = asm.AS_F(root);
-            Console.WriteLine(s);
+
+            List<Token> tokens = new List<Token>();
+            Token token;
+
+            while ((token = lexer.NextToken()).Type != TokenType.TOKEN_EOF)
+            {
+                Console.WriteLine(token);
+            }
+
+            lexer = new Lexer(source);
+            Parser parser = new Parser(lexer);
+            PROG prog = parser.Parse();
         }
 
         public void Compile()

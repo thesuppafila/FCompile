@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FCompile
 {
-    public class Lexer
+    public class OldLexer
     {
         string Source { get; set; }
 
@@ -26,11 +26,6 @@ namespace FCompile
             '+','-','*','/'
         };
 
-        private List<char> sg = new List<char>()
-        {
-            '<', '>', '=', '!'
-        };
-
         private List<char> symbols = new List<char>()
         {
             'A','a','B','b','C','c','D','d','E','e','F','f','G','g',
@@ -41,18 +36,14 @@ namespace FCompile
 
         private List<string> keywords = new List<string>()
         {
+            //"int",
             "if",
             "else",
             "return"
         };
 
-        private List<string> types = new List<string>()
-        {
-            "int"
-        };
 
-
-        public Lexer(string source)
+        public OldLexer(string source)
         {
             Source = source += '\0';
             Cursor = 0;
@@ -96,17 +87,8 @@ namespace FCompile
                 value += CurrentChar;
                 Advance();
             }
-
-            switch (value)
-            {
-                case "if": return new Token(value, TokenType.TOKEN_IF);
-                case "else": return new Token(value, TokenType.TOKEN_ELSE);
-                case "return": return new Token(value, TokenType.TOKEN_RETURN);
-                case "cout": return new Token(value, TokenType.TOKEN_OUTPUT);
-                case "cin": return new Token(value, TokenType.TOKEN_INPUT);
-            }
-            if (types.Contains(value))
-                return new Token(value, TokenType.TOKEN_TYPE);
+            //if (keywords.Contains(value))
+            //    return new Token(value, TokenType.TOKEN_KEYWORD);
             return new Token(value, TokenType.TOKEN_ID);
         }
 
@@ -121,44 +103,6 @@ namespace FCompile
             return new Token(value, TokenType.TOKEN_INT);
         }
 
-        private Token ParseSign()
-        {
-            string value = CurrentChar.ToString();
-            Advance();
-            if (CurrentChar == '=')
-            {
-                value += CurrentChar;
-                Advance();
-                switch (value)
-                {
-                    case "!=": return new Token(value, TokenType.TOKEN_NOTEQUAL);
-                    case "<=": return new Token(value, TokenType.TOKEN_LTE);
-                    case ">=": return new Token(value, TokenType.TOKEN_GTE);
-                    case "==": return new Token(value, TokenType.TOKEN_EQUAL);
-                }
-            }
-            else if ((value += CurrentChar) == ">>")
-            {
-                Advance();
-                return new Token(value, TokenType.TOKEN_REDIRECTED_IN);
-            }
-            else if ((value += CurrentChar) == "<<")
-            {
-                Advance();
-                return new Token(value, TokenType.TOKEN_REDIRECTED_OUT);
-            }
-
-            Cursor--;
-            CurrentChar = Source[Cursor];
-            switch (CurrentChar)
-            {
-                case '<': return AdvanceCurrent(TokenType.TOKEN_LT);
-                case '>': return AdvanceCurrent(TokenType.TOKEN_GT);
-                case '=':return AdvanceCurrent(TokenType.TOKEN_ASSIGN);
-                default: throw new Exception("Unexprected character -> " + CurrentChar);
-            }
-        }
-
         public Token NextToken()
         {
             while (CurrentChar != '\0')
@@ -168,8 +112,6 @@ namespace FCompile
                     return ParseId();
                 if (IsDigit(CurrentChar))
                     return ParseDigit();
-                if (IsSign(CurrentChar))
-                    return ParseSign();
                 switch (CurrentChar)
                 {
                     case '=': return AdvanceCurrent(TokenType.TOKEN_EQUAL);
@@ -178,6 +120,8 @@ namespace FCompile
                     case '{': return AdvanceCurrent(TokenType.TOKEN_LBRACE);
                     case '}': return AdvanceCurrent(TokenType.TOKEN_RBRACE);
                     case ',': return AdvanceCurrent(TokenType.TOKEN_COMMA);
+                    case '<': return AdvanceCurrent(TokenType.TOKEN_LT);
+                    case '>': return AdvanceCurrent(TokenType.TOKEN_GT);
                     case ';': return AdvanceCurrent(TokenType.TOKEN_SEMI);
                     case '\0': return AdvanceCurrent(TokenType.TOKEN_EOF);
                     default: throw new Exception("Unexprected character -> " + CurrentChar);
@@ -196,13 +140,6 @@ namespace FCompile
         private bool IsDigit(char symbol)
         {
             if (digits.Contains(symbol))
-                return true;
-            return false;
-        }
-
-        private bool IsSign(char symbol)
-        {
-            if (sg.Contains(symbol))
                 return true;
             return false;
         }

@@ -1,3 +1,10 @@
-﻿int main (int argc) {
-	return (1);
-}
+﻿
+int side(int a) {
+	cin >> a;
+	cin >> b;
+	if(a < b)
+	{
+		int c = a;
+	};
+	return a;
+};

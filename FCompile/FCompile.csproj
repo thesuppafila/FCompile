@@ -43,11 +43,32 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ASM.cs" />
-    <Compile Include="AST.cs" />
-    <Compile Include="AST_T.cs" />
+    <Compile Include="Old\ASM.cs" />
+    <Compile Include="Old\AST.cs" />
+    <Compile Include="Old\AST_T.cs" />
     <Compile Include="Compiler.cs" />
+    <Compile Include="Old\OldLexer.cs" />
     <Compile Include="Lexer.cs" />
+    <Compile Include="Node\impl\ASSING.cs" />
+    <Compile Include="Node\impl\COND.cs" />
+    <Compile Include="Node\impl\DEC.cs" />
+    <Compile Include="Node\impl\EXPRES.cs" />
+    <Compile Include="Node\impl\FACTOR.cs" />
+    <Compile Include="Node\impl\FUNC.cs" />
+    <Compile Include="Node\impl\ID.cs" />
+    <Compile Include="Node\INODE.cs" />
+    <Compile Include="Node\impl\INPUT.cs" />
+    <Compile Include="Node\IOPER.cs" />
+    <Compile Include="Node\impl\OUTPUT.cs" />
+    <Compile Include="Node\impl\PROG.cs" />
+    <Compile Include="Node\impl\RETURN.cs" />
+    <Compile Include="Node\impl\RL.cs" />
+    <Compile Include="Node\impl\SG.cs" />
+    <Compile Include="Node\impl\TERM.cs" />
+    <Compile Include="Node\impl\TYPE.cs" />
+    <Compile Include="Old\PT.cs" />
+    <Compile Include="Old\PTT.cs" />
+    <Compile Include="Old\OldParser.cs" />
     <Compile Include="Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -58,5 +79,6 @@
     <None Include="App.config" />
     <None Include="Examples\main.fc" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

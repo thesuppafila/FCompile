@@ -25,7 +25,7 @@ namespace FCompile
 
         public override string ToString()
         {
-            return String.Format("<type={0}>, <int_type={1}>, <value={2}>", Type, (int)Type, Value);
+            return String.Format("type = {0} , int_type = {1} , value = {2} ", Type, (int)Type, Value);
         }
     }
 
