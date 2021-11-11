@@ -8,30 +8,31 @@ namespace FCompile
 {
     public enum TokenType
     {
-        TOKEN_ID, // variable
-        TOKEN_INT, // number
-        TOKEN_EQUAL, // ==
-        TOKEN_LPAREN, // (
-        TOKEN_RPAREN, // )
-        TOKEN_COLON, // :
-        TOKEN_COMMA, // ,
-        TOKEN_LT, // <
-        TOKEN_GT, // >
-        TOKEN_LBRACE, // {
-        TOKEN_RBRACE, // }
-        TOKEN_SEMI, // ;
-        TOKEN_IF, // if
-        TOKEN_ELSE, // else
-        TOKEN_RETURN, // return
-        TOKEN_EOF, // \0
-        TOKEN_NOTEQUAL, //!=
-        TOKEN_LTE, // <=
-        TOKEN_GTE, // >=
-        TOKEN_ASSIGN, //=
-        TOKEN_INPUT, // cin
-        TOKEN_OUTPUT, // cout
-        TOKEN_REDIRECTED_IN, // >>
-        TOKEN_REDIRECTED_OUT, // <<
-        TOKEN_TYPE
+        ID, // variable
+        INT, // number
+        EQUAL, // ==
+        LEFTPAREN, // (
+        RIGHTPAREN, // )
+        COLON, // :
+        COMMA, // ,
+        LESSTHEN, // <
+        GREATERTHEN, // >
+        LEFTBRACE, // {
+        RIGHTBRACE, // }
+        SEMICOLON, // ;
+        IF, // if
+        ELSE, // else
+        RETURN, // return
+        ENDOFFILE, // \0
+        NOTEQUAL, //!=
+        LESSTHENOREQUAL, // <=
+        GREATERTHENOREQUAL, // >=
+        ASSIGNMENT, //=
+        INPUT, // cin
+        OUTPUT, // cout
+        REDIRECTED_IN, // >>
+        REDIRECTED_OUT, // <<
+        TYPE, // int 
+        OPERATION // + - * /
     }
 }

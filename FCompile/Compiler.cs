@@ -20,20 +20,21 @@ namespace FCompile
             List<Token> tokens = new List<Token>();
             Token token;
 
-            while ((token = lexer.NextToken()).Type != TokenType.TOKEN_EOF)
+            while ((token = lexer.NextToken()).Type != TokenType.ENDOFFILE)
             {
                 Console.WriteLine(token);
             }
 
             lexer = new Lexer(source);
             Parser parser = new Parser(lexer);
-            PROG prog = parser.Parse();
+            ProgramNode prog = parser.Parse();
+            Console.WriteLine(prog.ToString(Indent.TAB));
         }
 
         public void Compile()
         {
 
-            while ((token = lexer.NextToken()).Type != TokenType.TOKEN_EOF)
+            while ((token = lexer.NextToken()).Type != TokenType.ENDOFFILE)
             {
                 tokens.Add(token);
                 Console.WriteLine(token.ToString());

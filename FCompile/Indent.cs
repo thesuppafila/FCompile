@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FCompile.Node
+namespace FCompile
 {
-    public class RL: INODE
+    public static class Indent
     {
-        public EXPRES expres1;
-        public EXPRES expres2;
-        public SG SG;
+        public static string TAB = "    ";
+        public static string SPACE = " ";
     }
 }

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FCompile.Node;
 
 
@@ -23,7 +20,6 @@ namespace FCompile
             usedTokens = new List<Token>();
         }
 
-
         private Token Eat(TokenType type)
         {
             usedTokens.Add(token);
@@ -35,258 +31,267 @@ namespace FCompile
             return token;
         }
 
-        public PROG Parse()
+        public ProgramNode Parse()
         {
             return ParseProgram();
         }
 
-
-        private List<DEC> ParseDecList()
+        private List<DeclarationNode> ParseDecList() // eat: ( , )
         {
-            List<DEC> decList = new List<DEC>();
-            Eat(TokenType.TOKEN_LPAREN);
-            while (token.Type != TokenType.TOKEN_RPAREN)
+            List<DeclarationNode> decList = new List<DeclarationNode>();
+            Eat(TokenType.LEFTPAREN);
+            while (token.Type != TokenType.RIGHTPAREN)
             {
-                if (token.Type == TokenType.TOKEN_COMMA)
-                    Eat(TokenType.TOKEN_COMMA);
-                decList.Add(ParseDec());
+                if (token.Type == TokenType.COMMA)
+                    Eat(TokenType.COMMA);
+                decList.Add(ParseDeclaration());
             }
-            Eat(TokenType.TOKEN_RPAREN);
+            Eat(TokenType.RIGHTPAREN);
 
             return decList;
         }
 
-        //private ID ParseId()
-        //{
-        //    string value = token.Value;
-
-        //    Eat(TokenType.TOKEN_ID);
-        //    ID id = new ID();
-        //    id.name = value;
-
-        //    if (token.Type == TokenType.TOKEN_ASSIGN)
-        //    {
-        //        ParseOper();
-        //    }
-
-        //}
-
-        private DEC ParseDec()
+        private IOperation ParseIdentifier() // eat: id =
         {
-            DEC dec = new DEC();
+            IdentifierNode identifier = new IdentifierNode(token.Value);
+            Eat(TokenType.ID);
+            
+            if(token.Type == TokenType.OPERATION) //можно добавить классы для каждой операции
+            {
+                OperationSign operation = new OperationSign(token.Value);
+                Eat(TokenType.OPERATION);
+                ExpressionNode = new ExpressionNode(identifier,)
+            }
+            Eat(TokenType.ASSIGNMENT);
+            AssignmentNode assignment = new AssignmentNode();
+            assignment.identifier = new IdentifierNode(identifierName);
+            assignment.expression = ParseExpression();
+            return assignment;
+        }
+
+        private DeclarationNode ParseDeclaration() // eat: type id
+        {
+            DeclarationNode dec = new DeclarationNode();
 
             string value = token.Value;
-            Eat(TokenType.TOKEN_TYPE);
-            dec.TYPE = new TYPE(value);
+            Eat(TokenType.TYPE);
+            dec.type = new TypeNode(value);
 
             value = token.Value;
-            Eat(TokenType.TOKEN_ID);
-            dec.ID = new ID(value);
+            Eat(TokenType.ID);
+            dec.identifier = new IdentifierNode(value);
 
             return dec;
         }
 
-        private EXPRES ParseExpres()
-        {
-            string value;
-            if (token.Type == TokenType.TOKEN_INT)
-            {
-                value = token.Value;
-                Eat(TokenType.TOKEN_INT);
-                return new EXPRES(value);
-            }
-
-            value = token.Value;
-            Eat(TokenType.TOKEN_ID);
-            return new EXPRES(value);
-        }
-
-        private SG ParseSign()
+        private TermNode ParseTerm()
         {
             string value = token.Value;
-            SG sg;
+            if (token.Type == TokenType.ID)
+        }
+
+        private ExpressionNode ParseExpression() // eat: integer | id
+        {
+            if (token.Type == TokenType.INT)
+            {
+                IntegerNode integer = new IntegerNode(token.Value);
+                Eat(TokenType.INT);
+                return new ExpressionNode(ParseTerm());
+                //return new ExpressionNode(ParseTerm(new FactorNode(integer)));
+            }
+            
+            value = token.Value;
+            Eat(TokenType.ID);
+            return new ExpressionNode(value);
+        }
+
+        private SignNode ParseSign() // eat: sign
+        {
+            string value = token.Value;
+            SignNode sg;
             switch (token.Type)
             {
-                case TokenType.TOKEN_EQUAL:
-                    sg = new SG(SG_TYPE.EQ);
-                    Eat(TokenType.TOKEN_EQUAL);
+                case TokenType.EQUAL:
+                    sg = new SignNode(SG_TYPE.EQ);
+                    Eat(TokenType.EQUAL);
                     break;
-                case TokenType.TOKEN_NOTEQUAL:
-                    sg = new SG(SG_TYPE.NOTEQ);
-                    Eat(TokenType.TOKEN_NOTEQUAL);
+                case TokenType.NOTEQUAL:
+                    sg = new SignNode(SG_TYPE.NOTEQ);
+                    Eat(TokenType.NOTEQUAL);
                     break;
-                case TokenType.TOKEN_LT:
-                    sg = new SG(SG_TYPE.LT);
-                    Eat(TokenType.TOKEN_LT);
+                case TokenType.LESSTHEN:
+                    sg = new SignNode(SG_TYPE.LT);
+                    Eat(TokenType.LESSTHEN);
                     break;
-                case TokenType.TOKEN_LTE:
-                    sg = new SG(SG_TYPE.LTE);
-                    Eat(TokenType.TOKEN_LTE);
+                case TokenType.LESSTHENOREQUAL:
+                    sg = new SignNode(SG_TYPE.LTE);
+                    Eat(TokenType.LESSTHENOREQUAL);
                     break;
-                case TokenType.TOKEN_GT:
-                    sg = new SG(SG_TYPE.GT);
-                    Eat(TokenType.TOKEN_GT);
+                case TokenType.GREATERTHEN:
+                    sg = new SignNode(SG_TYPE.GT);
+                    Eat(TokenType.GREATERTHEN);
                     break;
-                case TokenType.TOKEN_GTE:
-                    sg = new SG(SG_TYPE.GTE);
-                    Eat(TokenType.TOKEN_GTE);
+                case TokenType.GREATERTHENOREQUAL:
+                    sg = new SignNode(SG_TYPE.GTE);
+                    Eat(TokenType.GREATERTHENOREQUAL);
                     break;
                 default: throw new Exception("Неожиданный символ: " + token.ToString() + ", ожидался: " + token.Type);
             }
             return sg;
         }
 
-        private RL ParseRL()
+        private RuleNode ParseRule()
         {
-            RL rule = new RL();
+            RuleNode rule = new RuleNode();
 
-            rule.expres1 = ParseExpres();
-            rule.SG = ParseSign();
-            rule.expres2 = ParseExpres();
+            rule.expression1 = ParseExpression();
+            rule.sign = ParseSign();
+            rule.expression2 = ParseExpression();
 
             return rule;
         }
 
-        private COND ParseCond()
+        private ConditionNode ParseCondition() // eat: if ( rule ) { }
         {
-            COND condition = new COND();
-            Eat(TokenType.TOKEN_IF); // if
+            ConditionNode condition = new ConditionNode();
+            Eat(TokenType.IF); // if
 
-            Eat(TokenType.TOKEN_LPAREN); // ( ... )
-            condition.RL = ParseRL();
-            Eat(TokenType.TOKEN_RPAREN);
+            Eat(TokenType.LEFTPAREN); // ( ... )
+            condition.rule = ParseRule();
+            Eat(TokenType.RIGHTPAREN);
 
-            condition.operList = ParseOperList();// { ... }
+            condition.operationList = ParseOperList();// { ... }
 
             return condition;
         }
 
-        private ASSING ParseAssign()
+        private AssignmentNode ParseAssignment() // eat: id = expression
         {
             string value = token.Value;
-            ASSING assign = new ASSING();
+            AssignmentNode assign = new AssignmentNode();
 
-            assign.ID = new ID(value);
-            Eat(TokenType.TOKEN_ID); // a = 
-            Eat(TokenType.TOKEN_ASSIGN);
+            assign.identifier = new IdentifierNode(value);
+            Eat(TokenType.ID); // a = 
+            Eat(TokenType.ASSIGNMENT);
 
-            assign.expres = ParseExpres();
+            assign.expression = ParseExpression();
 
             return assign;
         }
 
-        private INPUT ParseInput()
+        private InputNode ParseInput() // eat: cin >> id
         {
-            Eat(TokenType.TOKEN_INPUT);
-            Eat(TokenType.TOKEN_REDIRECTED_IN);
+            Eat(TokenType.INPUT);
+            Eat(TokenType.REDIRECTED_IN);
 
-            INPUT input = new INPUT();
+            InputNode input = new InputNode();
 
-            input.ID = new ID(token.Value);
-            Eat(TokenType.TOKEN_ID);
+            input.identifier = new IdentifierNode(token.Value);
+            Eat(TokenType.ID);
             return input;
         }
 
-        private OUTPUT ParseOutput()
+        private OutputNode ParseOutput() // eat: cout << id | integer
         {
-            Eat(TokenType.TOKEN_OUTPUT);
-            Eat(TokenType.TOKEN_REDIRECTED_OUT);
+            Eat(TokenType.OUTPUT);
+            Eat(TokenType.REDIRECTED_OUT);
 
-            OUTPUT output = new OUTPUT();
-            if (token.Type == TokenType.TOKEN_ID)
+            OutputNode output = new OutputNode();
+            if (token.Type == TokenType.ID)
             {
                 output.value = token.Value;
-                Eat(TokenType.TOKEN_ID);
+                Eat(TokenType.ID);
                 return output;
             }
 
             output.value = token.Value;
-            Eat(TokenType.TOKEN_INT);
+            Eat(TokenType.INT);
             return output;
         }
-        private RETURN ParseReturn()
+
+        private ReturnNode ParseReturn() // eat: return id
         {
-            Eat(TokenType.TOKEN_RETURN);
-            RETURN ret = new RETURN();
+            Eat(TokenType.RETURN);
+            ReturnNode ret = new ReturnNode();
             ret.value = token.Value;
-            Eat(TokenType.TOKEN_ID);
+            Eat(TokenType.ID);
             return ret;
         }
 
-        private IOPER ParseOper()
+        private IOperation ParseOperation()
         {
-            IOPER operation;
+            IOperation operation;
 
             switch (token.Type)
             {
-                case TokenType.TOKEN_TYPE:
-                    operation = ParseDec();
+                case TokenType.TYPE:
+                    operation = ParseDeclaration();
                     return operation;
-                case TokenType.TOKEN_IF:
-                    operation = ParseCond();
+                case TokenType.IF:
+                    operation = ParseCondition();
                     return operation;
-                case TokenType.TOKEN_ID:
-                    operation = ParseAssign();
+                case TokenType.ID:
+                    operation = ParseIdentifier();
                     return operation;
-                case TokenType.TOKEN_INPUT:
+                case TokenType.INPUT:
                     operation = ParseInput();
                     return operation;
-                case TokenType.TOKEN_OUTPUT:
+                case TokenType.OUTPUT:
                     operation = ParseOutput();
                     return operation;
-                case TokenType.TOKEN_RETURN:
+                case TokenType.RETURN:
                     operation = ParseReturn();
                     return operation;
                 default: throw new Exception("Неожиданный токен: " + token + " ожидался токен операции.");
             }
         }
 
-        private List<IOPER> ParseOperList()
+        private List<IOperation> ParseOperList() // eat: { operation ; operation ; }
         {
-            List<IOPER> operList = new List<IOPER>();
-            if (token.Type == TokenType.TOKEN_LBRACE)
+            List<IOperation> operList = new List<IOperation>();
+            if (token.Type == TokenType.LEFTBRACE)
             {
-                Eat(TokenType.TOKEN_LBRACE);
-                while (token.Type != TokenType.TOKEN_RBRACE)
+                Eat(TokenType.LEFTBRACE);
+                while (token.Type != TokenType.RIGHTBRACE)
                 {
-                    operList.Add(ParseOper());
-                    Eat(TokenType.TOKEN_SEMI);
+                    operList.Add(ParseOperation());
+                    Eat(TokenType.SEMICOLON);
                 }
-                Eat(TokenType.TOKEN_RBRACE);
+                Eat(TokenType.RIGHTBRACE);
             }
-            else ParseOper();
+            else ParseOperation();
 
             return operList;
         }
 
-        private FUNC ParseFunc()
+        private FunctionNode ParseFunction()
         {
-            FUNC func = new FUNC();
+            FunctionNode func = new FunctionNode();
             func.type = token.Value;
-            Eat(TokenType.TOKEN_TYPE);
+            Eat(TokenType.TYPE);
 
             func.name = token.Value;
-            Eat(TokenType.TOKEN_ID);
+            Eat(TokenType.ID);
 
-            func.DECLIST = ParseDecList();
+            func.declarationList = ParseDecList();
 
-            if (token.Type == TokenType.TOKEN_LBRACE)
+            if (token.Type == TokenType.LEFTBRACE)
             {
-                while (token.Type != TokenType.TOKEN_SEMI)
+                while (token.Type != TokenType.SEMICOLON)
                 {
-                    func.OPERLIST = ParseOperList();
+                    func.operationList = ParseOperList();
                 }
             }
             return func;
         }
 
-        private PROG ParseProgram()
+        private ProgramNode ParseProgram()
         {
-            PROG program = new PROG();
-            while (token.Type != TokenType.TOKEN_EOF)
+            ProgramNode program = new ProgramNode();
+            while (token.Type != TokenType.ENDOFFILE)
             {
-                program.FUNCLIST.Add(ParseFunc());
-                Eat(TokenType.TOKEN_SEMI);
+                program.functionList.Add(ParseFunction());
+                Eat(TokenType.SEMICOLON);
             }
             return program;
         }

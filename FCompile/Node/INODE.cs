@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    interface INODE
+    interface INode
     {
     }
 }

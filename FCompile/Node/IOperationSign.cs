@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FCompile.Node
+namespace FCompile.Node.impl
 {
-    public interface IOPER
+    interface IOperationSign
     {
+
     }
 }

@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    public class SG
+    public class SignNode
     {
         public SG_TYPE value;
 
-        public SG(SG_TYPE type)
+        public SignNode(SG_TYPE type)
         {
             this.value = type;
+        }
+
+        public override string ToString()
+        {
+            return value.ToString();
         }
     }
 

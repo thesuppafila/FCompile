@@ -6,15 +6,8 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    public class DEC: INODE, IOPER
+    public interface IOperation
     {
-        public TYPE TYPE;
-
-        public ID ID;
-
-        public DEC()
-        {
-
-        }
+        string ToString(string tab);
     }
 }

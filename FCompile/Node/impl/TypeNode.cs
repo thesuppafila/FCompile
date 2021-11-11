@@ -6,13 +6,18 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    public class EXPRES: INODE
+    public class TypeNode: INode
     {
         public string value;
 
-        public EXPRES(string value)
+        public TypeNode(string value)
         {
             this.value = value;
+        }
+
+        public override string ToString()
+        {
+            return value;
         }
     }
 }

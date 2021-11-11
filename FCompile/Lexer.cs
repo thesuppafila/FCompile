@@ -51,6 +51,10 @@ namespace FCompile
             "int"
         };
 
+        private List<char> operations = new List<char>()
+        {
+            '+','-','*','/'
+        };
 
         public Lexer(string source)
         {
@@ -99,15 +103,15 @@ namespace FCompile
 
             switch (value)
             {
-                case "if": return new Token(value, TokenType.TOKEN_IF);
-                case "else": return new Token(value, TokenType.TOKEN_ELSE);
-                case "return": return new Token(value, TokenType.TOKEN_RETURN);
-                case "cout": return new Token(value, TokenType.TOKEN_OUTPUT);
-                case "cin": return new Token(value, TokenType.TOKEN_INPUT);
+                case "if": return new Token(value, TokenType.IF);
+                case "else": return new Token(value, TokenType.ELSE);
+                case "return": return new Token(value, TokenType.RETURN);
+                case "cout": return new Token(value, TokenType.OUTPUT);
+                case "cin": return new Token(value, TokenType.INPUT);
             }
             if (types.Contains(value))
-                return new Token(value, TokenType.TOKEN_TYPE);
-            return new Token(value, TokenType.TOKEN_ID);
+                return new Token(value, TokenType.TYPE);
+            return new Token(value, TokenType.ID);
         }
 
         private Token ParseDigit()
@@ -118,7 +122,7 @@ namespace FCompile
                 value += CurrentChar;
                 Advance();
             }
-            return new Token(value, TokenType.TOKEN_INT);
+            return new Token(value, TokenType.INT);
         }
 
         private Token ParseSign()
@@ -131,30 +135,30 @@ namespace FCompile
                 Advance();
                 switch (value)
                 {
-                    case "!=": return new Token(value, TokenType.TOKEN_NOTEQUAL);
-                    case "<=": return new Token(value, TokenType.TOKEN_LTE);
-                    case ">=": return new Token(value, TokenType.TOKEN_GTE);
-                    case "==": return new Token(value, TokenType.TOKEN_EQUAL);
+                    case "!=": return new Token(value, TokenType.NOTEQUAL);
+                    case "<=": return new Token(value, TokenType.LESSTHENOREQUAL);
+                    case ">=": return new Token(value, TokenType.GREATERTHENOREQUAL);
+                    case "==": return new Token(value, TokenType.EQUAL);
                 }
             }
             else if ((value += CurrentChar) == ">>")
             {
                 Advance();
-                return new Token(value, TokenType.TOKEN_REDIRECTED_IN);
+                return new Token(value, TokenType.REDIRECTED_IN);
             }
             else if ((value += CurrentChar) == "<<")
             {
                 Advance();
-                return new Token(value, TokenType.TOKEN_REDIRECTED_OUT);
+                return new Token(value, TokenType.REDIRECTED_OUT);
             }
 
             Cursor--;
             CurrentChar = Source[Cursor];
             switch (CurrentChar)
             {
-                case '<': return AdvanceCurrent(TokenType.TOKEN_LT);
-                case '>': return AdvanceCurrent(TokenType.TOKEN_GT);
-                case '=':return AdvanceCurrent(TokenType.TOKEN_ASSIGN);
+                case '<': return AdvanceCurrent(TokenType.LESSTHEN);
+                case '>': return AdvanceCurrent(TokenType.GREATERTHEN);
+                case '=': return AdvanceCurrent(TokenType.ASSIGNMENT);
                 default: throw new Exception("Unexprected character -> " + CurrentChar);
             }
         }
@@ -170,20 +174,22 @@ namespace FCompile
                     return ParseDigit();
                 if (IsSign(CurrentChar))
                     return ParseSign();
+                if (IsOperation(CurrentChar))
+                    return AdvanceCurrent(TokenType.OPERATION);
                 switch (CurrentChar)
                 {
-                    case '=': return AdvanceCurrent(TokenType.TOKEN_EQUAL);
-                    case '(': return AdvanceCurrent(TokenType.TOKEN_LPAREN);
-                    case ')': return AdvanceCurrent(TokenType.TOKEN_RPAREN);
-                    case '{': return AdvanceCurrent(TokenType.TOKEN_LBRACE);
-                    case '}': return AdvanceCurrent(TokenType.TOKEN_RBRACE);
-                    case ',': return AdvanceCurrent(TokenType.TOKEN_COMMA);
-                    case ';': return AdvanceCurrent(TokenType.TOKEN_SEMI);
-                    case '\0': return AdvanceCurrent(TokenType.TOKEN_EOF);
+                    case '=': return AdvanceCurrent(TokenType.EQUAL);
+                    case '(': return AdvanceCurrent(TokenType.LEFTPAREN);
+                    case ')': return AdvanceCurrent(TokenType.RIGHTPAREN);
+                    case '{': return AdvanceCurrent(TokenType.LEFTBRACE);
+                    case '}': return AdvanceCurrent(TokenType.RIGHTBRACE);
+                    case ',': return AdvanceCurrent(TokenType.COMMA);
+                    case ';': return AdvanceCurrent(TokenType.SEMICOLON);
+                    case '\0': return AdvanceCurrent(TokenType.ENDOFFILE);
                     default: throw new Exception("Unexprected character -> " + CurrentChar);
                 }
             }
-            return new Token(TokenType.TOKEN_EOF);
+            return new Token(TokenType.ENDOFFILE);
         }
 
         private bool IsSymbol(char symbol)
@@ -203,6 +209,13 @@ namespace FCompile
         private bool IsSign(char symbol)
         {
             if (sg.Contains(symbol))
+                return true;
+            return false;
+        }
+
+        private bool IsOperation(char symbol)
+        {
+            if (operations.Contains(symbol))
                 return true;
             return false;
         }
