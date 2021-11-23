@@ -40,6 +40,11 @@ namespace FCompile.Node
             this.identifier = identifier;
         }
 
+        public FactorNode(ExpressionNode expression)
+        {
+            this.expression = expression;
+        }
+
         public override string ToString()
         {
             if (expression != null && operationSign != null)

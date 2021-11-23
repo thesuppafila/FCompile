@@ -2,6 +2,8 @@
 int side(int a) {
 	cin >> a;
 	cin >> b;
+	a = b + c;
+	c = b * 5 + a / 3;
 	if(a < b)
 	{
 		int c;

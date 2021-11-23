@@ -163,6 +163,11 @@ namespace FCompile
             }
         }
 
+        public Token ParseOperation()
+        {
+            return AdvanceCurrent(TokenType.OPERATION);
+        }
+
         public Token NextToken()
         {
             while (CurrentChar != '\0')
@@ -175,7 +180,7 @@ namespace FCompile
                 if (IsSign(CurrentChar))
                     return ParseSign();
                 if (IsOperation(CurrentChar))
-                    return AdvanceCurrent(TokenType.OPERATION);
+                    return ParseOperation();
                 switch (CurrentChar)
                 {
                     case '=': return AdvanceCurrent(TokenType.EQUAL);

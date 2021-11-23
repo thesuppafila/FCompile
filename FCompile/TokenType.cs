@@ -33,6 +33,6 @@ namespace FCompile
         REDIRECTED_IN, // >>
         REDIRECTED_OUT, // <<
         TYPE, // int 
-        OPERATION // + - * /
+        OPERATION, // +
     }
 }

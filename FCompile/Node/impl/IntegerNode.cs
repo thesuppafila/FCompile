@@ -1,6 +1,6 @@
 ﻿namespace FCompile.Node
 {
-    public class IntegerNode : INode
+    public class IntegerNode : INode, IExp
     {
         public string value;
 
@@ -17,6 +17,16 @@
         public override string ToString()
         {
             return value;
+        }
+
+        public string GetValue()
+        {
+            return value;
+        }
+
+        public TokenType GetTokenType()
+        {
+            return TokenType.INT;
         }
     }
 }

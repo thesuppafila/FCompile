@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    public class IdentifierNode : INode
+    public class IdentifierNode : INode, IExp
     {
-        public string name;
+        public string name; 
 
-        public ExpressionNode expression;
+        public ExpressionNode expression; // если i = a + b;
 
-        public string value;
+        public string value; //если i = 5;
 
         public IdentifierNode()
         {
@@ -39,6 +39,16 @@ namespace FCompile.Node
         public override string ToString()
         {
             return name;
+        }
+
+        public string GetValue()
+        {
+            return this.value;
+        }
+
+        public TokenType GetTokenType()
+        {
+            return TokenType.ID;
         }
     }
 }

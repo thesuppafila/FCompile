@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace FCompile.Node
 {
-    public class OperationSign
+    public class OperationSign: INode, IExp
     {
-        string value;
+        public string value;
+
+        public IExp left;
+
+        public IExp right;
 
         public OperationSign()
         {
@@ -24,5 +28,16 @@ namespace FCompile.Node
         {
             return value;
         }
+
+        public string GetValue()
+        {
+            return value;
+        }
+
+        public TokenType GetTokenType()
+        {
+            return TokenType.OPERATION;
+        }
+
     }
 }

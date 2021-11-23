@@ -51,17 +51,20 @@ namespace FCompile
             return decList;
         }
 
-        private IOperation ParseIdentifier() // eat: id =
+        private IOperation ParseIdentifier() // eat: id = | id + | 
         {
+            string identifierName = token.Value;
             IdentifierNode identifier = new IdentifierNode(token.Value);
             Eat(TokenType.ID);
-            
-            if(token.Type == TokenType.OPERATION) //можно добавить классы для каждой операции
-            {
-                OperationSign operation = new OperationSign(token.Value);
-                Eat(TokenType.OPERATION);
-                ExpressionNode = new ExpressionNode(identifier,)
-            }
+
+            //if (token.Type == TokenType.MULTIPLE || token.Type == TokenType.MINUS || token.Type == TokenType.PLUS || token.Type == TokenType.DIVISION) //можно добавить классы для каждой операции
+            //{
+            //    OperationSign operation = new OperationSign(token.Value);
+            //    Eat(token.Type);
+            //    ExpressionNode expression = 
+
+            //}
+
             Eat(TokenType.ASSIGNMENT);
             AssignmentNode assignment = new AssignmentNode();
             assignment.identifier = new IdentifierNode(identifierName);
@@ -84,25 +87,90 @@ namespace FCompile
             return dec;
         }
 
-        private TermNode ParseTerm()
+        private FactorNode ParseFactor()
         {
-            string value = token.Value;
-            if (token.Type == TokenType.ID)
-        }
-
-        private ExpressionNode ParseExpression() // eat: integer | id
-        {
+            FactorNode factor;
             if (token.Type == TokenType.INT)
             {
                 IntegerNode integer = new IntegerNode(token.Value);
+                factor = new FactorNode(integer);
                 Eat(TokenType.INT);
-                return new ExpressionNode(ParseTerm());
-                //return new ExpressionNode(ParseTerm(new FactorNode(integer)));
+                return factor;
             }
-            
-            value = token.Value;
+            if (token.Type == TokenType.LEFTPAREN)
+            {
+                Eat(TokenType.LEFTPAREN);
+                factor = new FactorNode(ParseExpression());
+                Eat(TokenType.RIGHTPAREN);
+                return factor;
+            }
+            IdentifierNode identifier = new IdentifierNode(token.Value);
+            factor = new FactorNode(identifier);
             Eat(TokenType.ID);
-            return new ExpressionNode(value);
+            return factor;
+        }
+
+        //private TermNode ParseTerm()
+        //{
+        //    TermNode term;
+        //    if (token.Type == TokenType.ID)
+        //    {
+        //        IdentifierNode identifier = new IdentifierNode(token.Value);
+        //        Eat(TokenType.ID);
+
+        //        if (token.Type == TokenType.SEMICOLON) //если a;
+        //        {
+        //            term = new TermNode(ParseFactor());
+        //            return term;
+        //        }                
+        //        if (token.Type == TokenType.PLUS)
+        //        {
+        //            term = new TermNode(new FactorNode)
+        //        }
+        //    }
+        //}
+
+        private ExpressionNode ParseExpression() // eat: integer | id
+        {
+            List<IExp> variables = new List<IExp>();
+            while (token.Type != TokenType.SEMICOLON)
+            {
+                if (token.Type == TokenType.INT)
+                {
+                    variables.Add(new IntegerNode(token.Value));
+                    Eat(TokenType.INT);
+                }
+                if (token.Type == TokenType.ID)
+                {
+                    variables.Add(new IdentifierNode(token.Value));
+                    Eat(TokenType.ID);
+                }
+                if (token.Type == TokenType.OPERATION)
+                {
+                    variables.Add(new OperationSign(token.Value));
+                    Eat(TokenType.OPERATION);
+                }
+            }
+
+            return new ExpressionNode(RPN.Build(variables));
+
+
+            //while (token.Type != TokenType.SEMICOLON)
+            //{
+
+            //}
+
+            //if (token.Type == TokenType.INT)
+            //{
+            //    expression = new ExpressionNode();
+            //     IntegerNode integer = new IntegerNode(token.Value);
+            //    return new ExpressionNode(ParseTerm());
+            //    //return new ExpressionNode(ParseTerm(new FactorNode(integer)));
+            //}
+
+            //value = token.Value;
+            //Eat(TokenType.ID);
+            //return new ExpressionNode(value);
         }
 
         private SignNode ParseSign() // eat: sign
@@ -171,8 +239,8 @@ namespace FCompile
             AssignmentNode assign = new AssignmentNode();
 
             assign.identifier = new IdentifierNode(value);
-            Eat(TokenType.ID); // a = 
-            Eat(TokenType.ASSIGNMENT);
+            Eat(TokenType.ID); // a 
+            Eat(TokenType.ASSIGNMENT); // =
 
             assign.expression = ParseExpression();
 
@@ -231,7 +299,7 @@ namespace FCompile
                     operation = ParseCondition();
                     return operation;
                 case TokenType.ID:
-                    operation = ParseIdentifier();
+                    operation = ParseAssignment();
                     return operation;
                 case TokenType.INPUT:
                     operation = ParseInput();
