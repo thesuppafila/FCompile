@@ -60,5 +60,43 @@ namespace FCompile.Node
             }
             return result;
         }
+
+        public string ToAssString()
+        {
+            string name;
+
+            if (this.name == "main")            
+                name = "_start:";            
+            else name = this.name;
+
+            string result = String.Format("{0}:\n push rbp \n mov rbp, rsp \n", name);
+
+            List<IDeclaration> declarations = new List<IDeclaration>();
+
+            if (declarationList.Count > 0)
+                foreach (DeclarationNode declaration in declarationList)
+                {
+                    declarations.Add(declaration);
+                }
+
+            foreach(IDeclaration operation in operationList)
+            {
+                if (typeof(DeclarationNode).IsInstanceOfType(operation))
+                {
+                    declarations.Add(operation);
+                }
+            }
+
+            if (declarations.Count > 0)
+            {
+                result += "section .data:\n";
+                foreach(IDeclaration declaration in declarations)
+                {
+                    result += declaration.ToAssString();
+                }
+            }    
+
+            return result;
+        }
     }
 }

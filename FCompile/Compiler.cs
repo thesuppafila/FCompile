@@ -29,6 +29,8 @@ namespace FCompile
             Parser parser = new Parser(lexer);
             ProgramNode prog = parser.Parse();
             Console.WriteLine(prog.ToString(Indent.TAB));
+
+            Console.WriteLine(prog.ToAssString());
         }
 
         public void Compile()

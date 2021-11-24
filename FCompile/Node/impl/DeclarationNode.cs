@@ -2,7 +2,7 @@
 
 namespace FCompile.Node
 {
-    public class DeclarationNode : INode, IOperation
+    public class DeclarationNode : INode, IOperation, IDeclaration
     {
         public TypeNode type;
 
@@ -28,6 +28,11 @@ namespace FCompile.Node
         public override string ToString()
         {
             return String.Format("{0} {1}", type, identifier);
+        }
+
+        public string ToAssString()
+        {
+            return String.Format("{0} db 0\n", identifier.name);
         }
     }
 }

@@ -29,5 +29,15 @@ namespace FCompile.Node
             }
             return tree;
         }
+
+        public string ToAssString()
+        {
+            string result = string.Empty;
+            foreach(FunctionNode function in functionList)
+            {
+                result += function.ToAssString();
+            }
+            return result;
+        }
     }
 }
