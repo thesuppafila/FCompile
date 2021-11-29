@@ -57,7 +57,6 @@
     <Compile Include="Node\impl\IntegerNode.cs" />
     <Compile Include="Node\impl\OperationSign.cs" />
     <Compile Include="Node\impl\PlusNode.cs" />
-    <Compile Include="Node\IOperationSign.cs" />
     <Compile Include="Node\INode.cs" />
     <Compile Include="Node\impl\InputNode.cs" />
     <Compile Include="Node\IOperation.cs" />

@@ -56,19 +56,12 @@ namespace FCompile
             string identifierName = token.Value;
             IdentifierNode identifier = new IdentifierNode(token.Value);
             Eat(TokenType.ID);
-
-            //if (token.Type == TokenType.MULTIPLE || token.Type == TokenType.MINUS || token.Type == TokenType.PLUS || token.Type == TokenType.DIVISION) //можно добавить классы для каждой операции
-            //{
-            //    OperationSign operation = new OperationSign(token.Value);
-            //    Eat(token.Type);
-            //    ExpressionNode expression = 
-
-            //}
-
             Eat(TokenType.ASSIGNMENT);
+
             AssignmentNode assignment = new AssignmentNode();
             assignment.identifier = new IdentifierNode(identifierName);
             assignment.expression = ParseExpression();
+
             return assignment;
         }
 
@@ -110,68 +103,52 @@ namespace FCompile
             return factor;
         }
 
-        //private TermNode ParseTerm()
-        //{
-        //    TermNode term;
-        //    if (token.Type == TokenType.ID)
-        //    {
-        //        IdentifierNode identifier = new IdentifierNode(token.Value);
-        //        Eat(TokenType.ID);
-
-        //        if (token.Type == TokenType.SEMICOLON) //если a;
-        //        {
-        //            term = new TermNode(ParseFactor());
-        //            return term;
-        //        }                
-        //        if (token.Type == TokenType.PLUS)
-        //        {
-        //            term = new TermNode(new FactorNode)
-        //        }
-        //    }
-        //}
 
         private ExpressionNode ParseExpression() // eat: integer | id
         {
             List<IExp> variables = new List<IExp>();
-            while (token.Type != TokenType.SEMICOLON)
+            bool waitOperation = false;
+            string lastValue = string.Empty;
+            while (token.Type != TokenType.SEMICOLON) //цикл заканчивается, если текущий токен - ; и предыдущий идентификатор или значение
             {
-                if (token.Type == TokenType.INT)
+                if (waitOperation)
                 {
-                    variables.Add(new IntegerNode(token.Value));
-                    Eat(TokenType.INT);
-                }
-                if (token.Type == TokenType.ID)
-                {
-                    variables.Add(new IdentifierNode(token.Value));
-                    Eat(TokenType.ID);
-                }
-                if (token.Type == TokenType.OPERATION)
-                {
-                    variables.Add(new OperationSign(token.Value));
+                    string value = token.Value;
                     Eat(TokenType.OPERATION);
+                    variables.Add(new OperationSign(value));
+                    lastValue = value;
+                    waitOperation = false;
                 }
+                else
+                {
+                    if (token.Type == TokenType.INT)
+                    {
+                        string value = token.Value;
+                        Eat(TokenType.INT);
+                        lastValue = value;
+                        variables.Add(new IntegerNode(value));
+                    }
+                    else
+                    {
+                        string value = token.Value;
+                        Eat(TokenType.ID);
+                        lastValue = value;
+                        variables.Add(new IdentifierNode(value));                        
+                    }
+                    waitOperation = true;
+                }
+            }if(signList.Contains(lastValue)) {
+                throw new Exception("Неожиданный токен: " + token.ToString() + " ожидался: " + TokenType.ID);
             }
 
             return new ExpressionNode(RPN.Build(variables));
 
-
-            //while (token.Type != TokenType.SEMICOLON)
-            //{
-
-            //}
-
-            //if (token.Type == TokenType.INT)
-            //{
-            //    expression = new ExpressionNode();
-            //     IntegerNode integer = new IntegerNode(token.Value);
-            //    return new ExpressionNode(ParseTerm());
-            //    //return new ExpressionNode(ParseTerm(new FactorNode(integer)));
-            //}
-
-            //value = token.Value;
-            //Eat(TokenType.ID);
-            //return new ExpressionNode(value);
         }
+
+        private List<string> signList = new List<string>()
+        {
+            "+","-","*","/"
+        };
 
         private SignNode ParseSign() // eat: sign
         {

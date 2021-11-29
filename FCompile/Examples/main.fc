@@ -1,4 +1,6 @@
 ﻿int main(int c) {
 	int a;
+	a = 5 + b / ++ 3;
+	b = 3 - 1 * 4;
 	int b;
 };

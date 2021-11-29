@@ -107,8 +107,8 @@ namespace FCompile
                     var a = temp.Pop();
                     var b = temp.Pop();
                     var node = new OperationSign(express[i].GetValue());
-                    node.left = a;
-                    node.right = b;
+                    node.left = b;
+                    node.right = a;
                     temp.Push(node);
                 }
             }
