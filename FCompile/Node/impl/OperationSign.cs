@@ -26,7 +26,12 @@ namespace FCompile.Node
 
         public override string ToString()
         {
-            return value;
+            string result = string.Empty;
+            if (left != null)
+                result+= left.ToString() + " ";
+            if (right != null)
+                result += right.ToString() + " ";
+            return result += value;
         }
 
         public string GetValue()

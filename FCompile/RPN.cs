@@ -112,7 +112,6 @@ namespace FCompile
                     temp.Push(node);
                 }
             }
-
             return temp.Peek();
         }
     }

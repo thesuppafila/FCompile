@@ -16,7 +16,7 @@ namespace FCompile.Node
             //if (operationSign != null)
             //    return String.Format("{0} {1} {2}", expression, operationSign, term);
             //return term.ToString();
-            return "oops! :*(";
+            return root.ToString();
         }
     }
 }

@@ -141,6 +141,8 @@ namespace FCompile
                 throw new Exception("Неожиданный токен: " + token.ToString() + " ожидался: " + TokenType.ID);
             }
 
+            //IExp expression = ;
+            //Console.WriteLine(expression.ToString());
             return new ExpressionNode(RPN.Build(variables));
 
         }
