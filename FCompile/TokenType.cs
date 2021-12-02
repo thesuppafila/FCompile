@@ -34,5 +34,20 @@ namespace FCompile
         REDIRECTED_OUT, // <<
         TYPE, // int 
         OPERATION, // +
+        PLUS,
+        MULTIPLE,
+        EXPRESSION,
+        TERM,
+        FACTOR,
+        DECLARE,
+        DECLIST,
+        FUNCLIST,
+        FUNCTION,
+        OPERLIST,
+        CONDITION,
+        SG,
+        COMPARE
     }
+
 }
+

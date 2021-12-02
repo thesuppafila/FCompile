@@ -24,6 +24,11 @@ namespace FCompile
                 sr.Close();
             }
 
+            string path = "SyntaxGrammar.txt";
+            Grammar grammar = new Grammar(path);
+
+
+
             Compiler compiler = new Compiler(source);
             compiler.Compile();
             Console.ReadKey();
