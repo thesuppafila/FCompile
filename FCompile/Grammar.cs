@@ -16,13 +16,13 @@ namespace FCompile
 
         HashSet<TokenType> nonterminal = new HashSet<TokenType>();
 
-        //HashSet<TokenType> leftU = new HashSet<TokenType>();
-
-        //HashSet<TokenType> rightU = new HashSet<TokenType>();
+        HashSet<TokenType> all = new HashSet<TokenType>();
 
         Dictionary<TokenType, HashSet<TokenType>> leftU = new Dictionary<TokenType, HashSet<TokenType>>();
 
         Dictionary<TokenType, HashSet<TokenType>> rightU = new Dictionary<TokenType, HashSet<TokenType>>();
+
+        Dictionary<Tuple<TokenType, TokenType>, List<int>> table = new Dictionary<Tuple<TokenType, TokenType>, List<int>>();
 
         public Grammar(string path)
         {
@@ -30,6 +30,9 @@ namespace FCompile
             FindTerminal();
             FindNonTerminal();
             LeftU();
+            RightU();
+            FullSet();
+            FillTable();
         }
 
         private List<Rule> ReadFromFile(string path)
@@ -114,6 +117,7 @@ namespace FCompile
             }
         }
 
+
         List<Rule> usedRule = new List<Rule>();
 
         private HashSet<TokenType> AddLeft(TokenType type)
@@ -136,18 +140,72 @@ namespace FCompile
             return set;
         }
 
-        //private void RightU()
-        //{
-        //    foreach (TokenType type in nonterminal)
-        //    {
-        //        foreach (Rule rule in rules)
-        //        {
-        //            if (rule.leftPart == type)
-        //            {
-        //                rightU.Add(rule.rightPart.Last());
-        //            }
-        //        }
-        //    }
-        //}
+        private void RightU()
+        {
+            foreach (TokenType type in nonterminal)
+            {
+                rightU.Add(type, AddRight(type));
+            }
+        }
+
+        private HashSet<TokenType> AddRight(TokenType type)
+        {
+            HashSet<TokenType> set = new HashSet<TokenType>();
+
+            foreach (Rule rule in rules) //по каждому правилу
+            {
+                if (!usedRule.Contains(rule))
+                {
+                    if (rule.leftPart == type) //если текущий есть левая часть правила
+                    {
+                        set.Add(rule.rightPart.Last()); //добавляем левый элемент в сет
+                        usedRule.Add(rule);
+                        set.UnionWith(AddLeft(rule.rightPart.Last())); //вызываем эту же функцию
+                    }
+                }
+            }
+            if (usedRule.Count > 0)
+                usedRule.Remove(usedRule.Last());
+            return set;
+        }
+
+        private void FillTable()
+        {
+            foreach(TokenType type in all)
+            {
+                foreach(TokenType type1 in all)
+                {
+                    table.Add(Tuple.Create(type, type1), new List<int>());
+                }
+            }
+
+            foreach(Rule rule in rules)
+            {
+                if(rule.rightPart.Count > 1)
+                {
+                    for(int i = 0; i < rule.rightPart.Count-1; i++)
+                    {
+                        table[Tuple.Create(rule.rightPart[i], rule.rightPart[i + 1])].Add(1);
+                    }
+                }
+            }
+
+            foreach(TokenType type in all)
+            {
+                foreach(Rule rule in rules)
+                {
+                    if(rule.rightPart.Count > 1)
+                    {
+
+                    }
+                }
+            }
+        }
+
+        private void FullSet()
+        {
+            all.UnionWith(nonterminal);
+            all.UnionWith(terminal);            
+        }
     }
 }

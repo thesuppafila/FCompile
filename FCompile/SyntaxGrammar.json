@@ -15,18 +15,47 @@
   {"LeftPart": "<SG>", "RightPart": "< | > | <= | >= | == | !="},
   {"LeftPart": "<EXPRES>", "RightPart": "<TERM> | <EXPRES> + <TERM> | <EXPRES> - <TERM>"},
   {"LeftPart": "<TERM>", "RightPart": " <FACTOR> | <TERM> * <FACTOR> | <TERM> / <FACTOR>"},
-  {"LeftPart": "<FACTOR>", "RightPart": "IDN | CON | ( <EXPRES> ) | - <FACTOR>"}
+  {"LeftPart": "<FACTOR>", "RightPart": "IDN | CON | ( <EXPRES> ) | - <FACTOR>"}  
 ]
 
 
-ParseProgram(ParseFunction(), Eat(";"));
+funclist -> funclist semi func
+funclist -> func
+func -> dec lp declist rp lb oplist rb
+declist -> declist comma dec
+declist -> dec
+comma - > ','
+dec -> type id
+type -> 'int'
+id -> 'a-Z'
+lp -> '('
+rp -> ')'
+lb -> '{'
+rb -> '}'
 
-ParseFunction("type", "funcName", ParseDecList() "{" ParseOperList() "}");
+oplist -> oplist semi oper semi
+oplist -> oper semi
+semi -> ';'
+oper -> cond
+oper -> assign
+cond -> if lp comp rp lb oplist rb semi
+if -> 'if'
+comp -> e sg e
+sg -> '>'
+sg -> '<'
+sg -> '=='
+sg -> '!='
+sg -> '<='
+sg -> '>='
 
-ParseDecList("(", ParseDec() || ParseDecList() "," ParseDec(), ")");
+assign -> id eq e
+eq -> '='
 
-ParseDec("type", ParseId( ), )
-
-DECLIST Eat( "(", ")" , ")" )
-
-OPERLIST Eat("TYPE", "ID", )
+e -> e plus t
+e -> t
+t -> t multiple f
+t -> f
+f -> id
+f -> num
+f -> lp e rp
+plus -> 
